@@ -37,24 +37,27 @@ const Cart = () => {
 
     // Dummy Razorpay Options config
     const options = {
-      key: 'rzp_test_YourTestKey', // Replace with your test key if you want real tracking
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Replace with your test key if you want real tracking
       amount: totalAmount * 100, // Amount is in currency subunits (paise)
-      currency: 'INR',
-      name: 'Swiggy Clone',
-      description: 'Test Environment Transaction',
-      image: 'https://cdn-images-1.medium.com/max/1200/1*C4h1f610h6kX6s2Yh6pUXQ.png',
+      currency: "INR",
+      name: '"ByteMeals',
+      description: "Test Environment Transaction",
+      image:
+        "https://cdn-images-1.medium.com/max/1200/1*C4h1f610h6kX6s2Yh6pUXQ.png",
       handler: function (response) {
-        toast.success(`Payment Successful! Order ID: ${response.razorpay_payment_id}`);
+        toast.success(
+          `Payment Successful! Order ID: ${response.razorpay_payment_id}`,
+        );
         dispatch(clearCart());
-        navigate('/');
+        navigate("/");
       },
       prefill: {
-        name: user.displayName || 'Test User',
-        email: user.email || 'test@example.com',
-        contact: '9999999999',
+        name: user.displayName || "Test User",
+        email: user.email || "test@example.com",
+        contact: "9999999999",
       },
       theme: {
-        color: '#fc8019',
+        color: "#fc8019",
       },
     };
 

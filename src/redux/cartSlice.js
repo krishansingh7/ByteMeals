@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   items: [],
@@ -6,34 +6,44 @@ const initialState = {
 };
 
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     addItem: (state, action) => {
-      // We check if item already exists
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if(existingItem) {
+      const existingItem = state.items.find(
+        (item) => item.id === action.payload.id,
+      );
+      if (existingItem) {
         existingItem.quantity += 1;
       } else {
         state.items.push({ ...action.payload, quantity: 1 });
       }
     },
     removeItem: (state, action) => {
-      const existingItem = state.items.find(item => item.id === action.payload);
-      if(existingItem) {
-        if(existingItem.quantity > 1) {
+      const existingItem = state.items.find(
+        (item) => item.id === action.payload,
+      );
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
           existingItem.quantity -= 1;
         } else {
-          state.items = state.items.filter(item => item.id !== action.payload);
+          state.items = state.items.filter(
+            (item) => item.id !== action.payload,
+          );
         }
       }
     },
     clearCart: (state) => {
       state.items = [];
       state.restaurant = null;
-    }
+      localStorage.removeItem("cart"); // wipe on clear
+    },
+    loadCartFromStorage: (state, action) => {
+      state.items = action.payload; // restore cart after login
+    },
   },
 });
 
-export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export const { addItem, removeItem, clearCart, loadCartFromStorage } =
+  cartSlice.actions;
 export default cartSlice.reducer;

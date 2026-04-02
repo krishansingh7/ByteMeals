@@ -66,7 +66,7 @@ const Navbar = () => {
             {city === "GPS Location" ? "GPS Target" : city || "Other"}
           </span>
           <span className="text-sm text-gray-500 dark:text-gray-400 truncate hidden sm:inline-block w-[120px] lg:w-auto">
-            {address || "Mumbai, Maharashtra, India"}
+            {address || "New Delhi, Delhi, India"}
           </span>
           <ChevronDown size={18} className="text-orange-500 shrink-0" />
         </button>

@@ -20,6 +20,7 @@ import RestaurantMenu from './pages/RestaurantMenu';
 import CategoryItems from './pages/CategoryItems';
 import Cart from './pages/Cart';
 import ProtectedRoute from './components/ProtectedRoute';
+import Contact from './pages/Contact';
 
 function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/contact" element={<Contact />} />
             
             {/* Protected Routes */}
             <Route path="/profile" element={

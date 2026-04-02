@@ -23,14 +23,27 @@ const Profile = () => {
       <div className="mb-6 flex items-center justify-between border-b pb-4">
         <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
       </div>
-      
+
       <div className="rounded-lg border border-gray-100 bg-white p-6 shadow-sm">
         <div className="mb-8 flex items-center space-x-6">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-orange-100 text-3xl font-bold text-orange-600 shadow-sm">
-            {user?.displayName ? user.displayName[0].toUpperCase() : 'U'}
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-orange-100 text-3xl font-bold text-orange-600 shadow-sm overflow-hidden">
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName || "User"}
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            ) : user?.displayName ? (
+              user.displayName[0].toUpperCase()
+            ) : (
+              "U"
+            )}
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">{user?.displayName || 'App User'}</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              {user?.displayName || "App User"}
+            </h2>
             <p className="font-medium text-gray-500">{user?.email}</p>
           </div>
         </div>

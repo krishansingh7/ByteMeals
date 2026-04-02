@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const Home = () => {
   const { allRestaurants, topChains, categories, isLoading, error, isFetchingMore, fetchMoreRestaurants } = useRestaurants();
-   const { city, address } = useSelector((state) => state.location);
+   const { city } = useSelector((state) => state.location);
   const observerRef = useRef();
   
 

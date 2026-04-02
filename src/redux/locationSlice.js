@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  lat: '19.0759837', // Default: Mumbai
-  lng: '72.8776559',
-  city: 'Mumbai',
-  address: 'Mumbai, Maharashtra, India',
+  lat: "28.6139391", // Default: Delhi
+  lng: "77.2090212",
+  city: "Delhi",
+  address: "New Delhi, Delhi, India",
 };
 
 const locationSlice = createSlice({

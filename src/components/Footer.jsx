@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { FaInstagram, FaGithub } from "react-icons/fa";
+
 const Footer = () => {
   return (
     <footer className="bg-black text-gray-300">
@@ -9,6 +12,25 @@ const Footer = () => {
               © {new Date().getFullYear()} ByteMeals Developed as a portfolio
               project. Not affiliated with actual Swiggy.
             </p>
+            <p className="text-sm">Made with ❤️ by Krishna</p>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/krishansingh__"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-pink-500"
+              >
+                <FaInstagram size={22} />
+              </a>
+              <a
+                href="https://github.com/krishansingh7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-white"
+              >
+                <FaGithub size={22} />
+              </a>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">Company</h2>
@@ -20,12 +42,18 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">Contact us</h2>
-            <p className="cursor-pointer transition hover:text-white">
+            <Link
+              to="/contact"
+              className="cursor-pointer transition hover:text-white"
+            >
               Help & Support
-            </p>
-            <p className="cursor-pointer transition hover:text-white">
+            </Link>
+            <Link
+              to="/contact"
+              className="cursor-pointer transition hover:text-white"
+            >
               Partner with us
-            </p>
+            </Link>
             <p className="cursor-pointer transition hover:text-white">
               Ride with us
             </p>
