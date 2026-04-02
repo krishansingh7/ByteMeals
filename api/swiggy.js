@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const url = new URL(req.url, "http://localhost");
   const swiggyPath = url.pathname.replace("/api/swiggy", "") + url.search;
   const swiggyUrl = `https://www.swiggy.com${swiggyPath}`;
@@ -20,4 +20,4 @@ export default async function handler(req, res) {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch from Swiggy" });
   }
-}
+};
