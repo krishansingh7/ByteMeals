@@ -1,9 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  items: [],
-  restaurant: null,
+const getInitialCartState = () => {
+  try {
+    const savedCart = localStorage.getItem("cart");
+    return {
+      items: savedCart ? JSON.parse(savedCart) : [],
+      restaurant: null,
+    };
+  } catch (error) {
+    console.error("Cart hydration failed:", error);
+    return { items: [], restaurant: null };
+  }
 };
+
+const initialState = getInitialCartState();
 
 const cartSlice = createSlice({
   name: "cart",
@@ -18,6 +28,7 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ ...action.payload, quantity: 1 });
       }
+      localStorage.setItem("cart", JSON.stringify(state.items));
     },
     removeItem: (state, action) => {
       const existingItem = state.items.find(
@@ -32,6 +43,7 @@ const cartSlice = createSlice({
           );
         }
       }
+      localStorage.setItem("cart", JSON.stringify(state.items));
     },
     clearCart: (state) => {
       state.items = [];

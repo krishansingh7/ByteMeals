@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { addItem, removeItem, clearCart } from '../redux/cartSlice';
-import { MENU_IMG_URL } from '../utils/constants';
-import { loadScript } from '../utils/loadScript';
+import { clearCart } from '../redux/cartSlice';
+import CartItem from '../components/CartItem';
 import toast from 'react-hot-toast';
 
 const Cart = () => {
@@ -11,7 +10,6 @@ const Cart = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isProcessing, setIsProcessing] = useState(false);
 
   // Derived state
   const totalAmount = items.reduce((acc, item) => {
@@ -19,55 +17,13 @@ const Cart = () => {
     return acc + itemPrice * item.quantity;
   }, 0);
 
-  const displayRazorpay = async () => {
+  const handleProceedToCheckout = () => {
     if (!user) {
       toast.error('Please login to place your order.');
       navigate('/login');
       return;
     }
-
-    setIsProcessing(true);
-    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-
-    if (!res) {
-      toast.error('Razorpay SDK failed to load. Are you online?');
-      setIsProcessing(false);
-      return;
-    }
-
-    // Dummy Razorpay Options config
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Replace with your test key if you want real tracking
-      amount: totalAmount * 100, // Amount is in currency subunits (paise)
-      currency: "INR",
-      name: '"ByteMeals',
-      description: "Test Environment Transaction",
-      image:
-        "https://cdn-images-1.medium.com/max/1200/1*C4h1f610h6kX6s2Yh6pUXQ.png",
-      handler: function (response) {
-        toast.success(
-          `Payment Successful! Order ID: ${response.razorpay_payment_id}`,
-        );
-        dispatch(clearCart());
-        navigate("/");
-      },
-      prefill: {
-        name: user.displayName || "Test User",
-        email: user.email || "test@example.com",
-        contact: "9999999999",
-      },
-      theme: {
-        color: "#fc8019",
-      },
-    };
-
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.on('payment.failed', function (response) {
-      toast.error('Payment Failed: ' + response.error.description);
-    });
-    
-    paymentObject.open();
-    setIsProcessing(false);
+    navigate('/checkout');
   };
 
   if (items.length === 0) {
@@ -100,51 +56,7 @@ const Cart = () => {
           
           <div className="flex flex-col gap-6">
             {items.map((item) => (
-              <div key={item.id} className="flex justify-between items-center sm:items-start border-b pb-4 dark:border-slate-800 last:border-0">
-                
-                {/* Product Info */}
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden">
-                    {item.imageId ? (
-                      <img src={MENU_IMG_URL + item.imageId} alt={item.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="flex items-center justify-center h-full w-full text-xs text-slate-400">No Image</span>
-                    )}
-                  </div>
-                  <div className="flex flex-col justify-center h-full gap-1 pt-1">
-                     <span className="font-semibold text-slate-800 dark:text-slate-200 text-[15px] sm:text-base line-clamp-2">
-                       {item.name}
-                     </span>
-                     <span className="font-semibold text-sm text-slate-600 dark:text-slate-400">
-                       ₹{item.price ? item.price / 100 : item.defaultPrice / 100}
-                     </span>
-                  </div>
-                </div>
-                
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-800 h-8 sm:h-10">
-                    <button 
-                      onClick={() => dispatch(removeItem(item.id))}
-                      className="px-3 sm:px-4 leading-none text-slate-600 dark:text-slate-300 hover:text-orange-500 font-bold"
-                    >
-                      -
-                    </button>
-                    <span className="font-semibold text-sm w-4 flex justify-center text-green-600 dark:text-green-500">
-                      {item.quantity}
-                    </span>
-                    <button 
-                      onClick={() => dispatch(addItem(item))}
-                      className="px-3 sm:px-4 leading-none text-green-600 dark:text-green-500 font-bold text-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <span className="w-16 text-right font-bold text-[#3e4152] dark:text-slate-200 text-sm sm:text-base">
-                    ₹{((item.price ? item.price / 100 : item.defaultPrice / 100) * item.quantity).toFixed(0)}
-                  </span>
-                </div>
-              </div>
+              <CartItem key={item.id} item={item} />
             ))}
           </div>
         </div>
@@ -184,11 +96,10 @@ const Cart = () => {
              </div>
 
              <button
-               disabled={isProcessing}
-               onClick={displayRazorpay}
-               className={`w-full font-bold text-white uppercase text-[15px] py-4 rounded-xl shadow-lg mt-8 transition-all ${isProcessing ? 'bg-orange-400' : 'bg-primary hover:bg-orange-600 hover:shadow-xl'}`}
+               onClick={handleProceedToCheckout}
+               className="w-full font-bold text-white uppercase text-[15px] py-4 rounded-xl shadow-lg mt-8 transition-all bg-primary hover:bg-orange-600 hover:shadow-xl"
              >
-               {isProcessing ? 'Processing...' : 'Proceed To Pay'}
+               Proceed to Checkout
              </button>
              <p className="text-[10px] text-center text-slate-400 mt-3 font-semibold">
                * This is a Dummy Project Checkout Route *

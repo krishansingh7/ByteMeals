@@ -5,6 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 import store from "../redux/store";
 import { setUser } from "../redux/userSlice";
 import { loadCartFromStorage, clearCart } from "../redux/cartSlice";
+import { loadOrdersFromStorage, clearOrders } from "../redux/ordersSlice";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -32,16 +33,23 @@ onAuthStateChanged(auth, (user) => {
       photoURL: user.photoURL,
     }));
 
-    // Restore cart from localStorage
+    // Restore cart and orders from localStorage
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
       store.dispatch(loadCartFromStorage(JSON.parse(savedCart)));
+    }
+    
+    const savedOrders = localStorage.getItem('orders');
+    if (savedOrders) {
+      store.dispatch(loadOrdersFromStorage(JSON.parse(savedOrders)));
     }
   } else {
     // User logged out — clear everything
     store.dispatch(setUser(null));
     localStorage.removeItem('cart'); // wipe cart on logout
+    localStorage.removeItem('orders');
     store.dispatch(clearCart());
+    store.dispatch(clearOrders());
   }
 });
 

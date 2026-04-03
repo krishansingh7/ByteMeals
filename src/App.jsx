@@ -19,6 +19,10 @@ import NotFound from './pages/NotFound';
 import RestaurantMenu from './pages/RestaurantMenu';
 import CategoryItems from './pages/CategoryItems';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Payment from './pages/Payment';
+import OrderConfirmation from './pages/OrderConfirmation';
+import Orders from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
 import Contact from './pages/Contact';
 
@@ -62,6 +66,26 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/checkout" element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            } />
+            <Route path="/payment" element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            } />
+            <Route path="/order-confirmation" element={
+              <ProtectedRoute>
+                <OrderConfirmation />
+              </ProtectedRoute>
+            } />
+            <Route path="/orders" element={
+              <ProtectedRoute>
+                <Orders />
               </ProtectedRoute>
             } />
             
