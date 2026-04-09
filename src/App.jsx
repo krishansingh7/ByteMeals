@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -6,25 +6,32 @@ import { auth } from './utils/firebase';
 import { setUser, clearUser } from './redux/userSlice';
 import { Toaster } from 'react-hot-toast';
 
-// Layout components
+// Layout components (Always eagerly loaded for FCP rendering)
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
-// Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
-import RestaurantMenu from './pages/RestaurantMenu';
-import CategoryItems from './pages/CategoryItems';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Payment from './pages/Payment';
-import OrderConfirmation from './pages/OrderConfirmation';
-import Orders from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
-import Contact from './pages/Contact';
+
+// Lazy-Loaded Pages for JS Code-Splitting (Massive Bundle Optimization)
+const Login = React.lazy(() => import('./pages/Login'));
+const Signup = React.lazy(() => import('./pages/Signup'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const RestaurantMenu = React.lazy(() => import('./pages/RestaurantMenu'));
+const CategoryItems = React.lazy(() => import('./pages/CategoryItems'));
+const Cart = React.lazy(() => import('./pages/Cart'));
+const Checkout = React.lazy(() => import('./pages/Checkout'));
+const Payment = React.lazy(() => import('./pages/Payment'));
+const OrderConfirmation = React.lazy(() => import('./pages/OrderConfirmation'));
+const Orders = React.lazy(() => import('./pages/Orders'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+
+// Fallback skeleton loader for Suspense Boundary mapping
+const SuspenseFallback = () => (
+  <div className="flex-1 w-full min-h-[70vh] flex items-center justify-center">
+    <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -53,14 +60,15 @@ function App() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1 bg-white dark:bg-[#121212] transition-colors duration-200">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/restaurant/:id" element={<RestaurantMenu />} />
-            <Route path="/category/:name" element={<CategoryItems />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/contact" element={<Contact />} />
+          <Suspense fallback={<SuspenseFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/restaurant/:id" element={<RestaurantMenu />} />
+              <Route path="/category/:name" element={<CategoryItems />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/contact" element={<Contact />} />
             
             {/* Protected Routes */}
             <Route path="/profile" element={
@@ -91,6 +99,7 @@ function App() {
             
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>

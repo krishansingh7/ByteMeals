@@ -1,4 +1,4 @@
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   const url = new URL(req.url, "http://localhost");
   const swiggyPath = url.pathname.replace("/api/swiggy", "") + url.search;
   const swiggyUrl = `https://www.swiggy.com${swiggyPath}`;
@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
         data = JSON.parse(fallbackText);
       } catch (err) {
         return res.status(502).json({
-          error: "Swiggy WAF blocked Both Vercel and Fallback Proxies. Try MAPI.",
+          error: "Swiggy WAF blocked Both Vercel and Fallback Proxies. Try MAPI.", err,
           details: fallbackText.substring(0, 200),
         });
       }

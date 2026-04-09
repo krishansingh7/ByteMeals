@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
 import { RESTAURANT_MENU_API } from '../utils/constants';
 import { MOCK_MENU_DATA } from '../mockData/menuData';
 
@@ -7,28 +8,39 @@ const useRestaurantMenu = (resId) => {
   const { lat, lng } = useSelector((state) => state.location);
   const [resInfo, setResInfo] = useState(null);
   const [menuCategories, setMenuCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const error = null; // Removed state as it guarantees uptime via fallbacks
+  const error = null;
+
+  const { data: menuData, isLoading: queryLoading, isError } = useQuery({
+    queryKey: ['restaurantMenu', resId, lat, lng],
+    queryFn: async () => {
+      const response = await fetch(RESTAURANT_MENU_API(lat, lng) + resId);
+      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+      const text = await response.text();
+      if (!text) throw new Error('API returned an empty response.');
+      return JSON.parse(text);
+    },
+    enabled: !!resId, // Only fetch if resId is provided
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const isLoading = queryLoading && !menuData;
 
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(RESTAURANT_MENU_API(lat, lng) + resId);
-        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-        
-        const text = await response.text();
-        if (!text) throw new Error('API returned an empty response. Try refreshing the page.');
-        
-        const json = JSON.parse(text);
-        extractMenuData(json);
-      } catch (err) {
-        console.warn("Live API Failed for Menu. Engaging Hybrid Fallback Protocol:", err.message);
+    if (menuData) {
+      // Swiggy sometimes returns HTTP 200 but with empty or error-coded JSON (e.g., statusCode: 1)
+      const hasValidData = menuData?.data?.cards?.length > 0;
+      
+      if (hasValidData) {
+        extractMenuData(menuData);
+      } else {
+        console.warn("API returned 200 OK but payload was empty/invalid. Engaging Fallback Protocol.");
         extractMenuData(MOCK_MENU_DATA);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } else if (isError) {
+      console.warn("Live API Failed for Menu. Engaging Hybrid Fallback Protocol.");
+      extractMenuData(MOCK_MENU_DATA);
+    }
+  }, [menuData, isError]);
 
     const extractMenuData = (json) => {
       const cards = json?.data?.cards || [];
@@ -52,11 +64,6 @@ const useRestaurantMenu = (resId) => {
       
       setMenuCategories(validCategories);
     };
-
-    if (resId) {
-      fetchMenu();
-    }
-  }, [resId, lat, lng]);
 
   return { resInfo, menuCategories, isLoading, error };
 };

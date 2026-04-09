@@ -7,9 +7,9 @@ const Footer = () => {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-black text-white">ByteMeals</h1>
+            <h1 className="text-2xl font-black text-white">ByteMeal</h1>
             <p className="text-sm">
-              © {new Date().getFullYear()} ByteMeals Developed as a portfolio
+              © {new Date().getFullYear()} ByteMeal Developed as a portfolio
               project. Not affiliated with actual Swiggy.
             </p>
             <p className="text-sm">Made with ❤️ by Krishna</p>

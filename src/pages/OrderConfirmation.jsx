@@ -28,7 +28,7 @@ const OrderConfirmation = () => {
 
         <h1 className="text-3xl font-extrabold text-[#3e4152] dark:text-slate-100 mb-2">Order Confirmed!</h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium mb-8">
-          Thank you for choosing ByteMeals. Your food is currently being prepared.
+          Thank you for choosing ByteMeal. Your food is currently being prepared.
         </p>
 
         <div className="w-full bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 flex flex-col gap-4 border border-slate-100 dark:border-slate-700/50 mb-8">

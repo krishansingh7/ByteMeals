@@ -24,7 +24,7 @@ const CartItem = ({ item }) => {
       <div className="flex items-start gap-4 flex-1">
         <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
           {item.imageId ? (
-            <img src={MENU_IMG_URL + item.imageId} alt={item.name} className="w-full h-full object-cover" />
+            <img src={MENU_IMG_URL + item.imageId} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
           ) : (
             <span className="flex items-center justify-center h-full w-full text-xs text-slate-400">No Image</span>
           )}

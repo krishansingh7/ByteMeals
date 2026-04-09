@@ -105,4 +105,4 @@ const MenuItem = ({ itemInfo }) => {
   );
 };
 
-export default MenuItem;
+export default React.memo(MenuItem);

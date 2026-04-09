@@ -1,7 +1,7 @@
 {
-  "name": "swiggy-clone",
+  "name": "bytemeal",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "@formspree/react": "^3.0.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-query": "^5.97.0",
     "autoprefixer": "^10.4.27",
     "axios": "^1.14.0",
     "firebase": "^12.11.0",
@@ -31,7 +32,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.4",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",

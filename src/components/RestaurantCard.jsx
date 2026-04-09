@@ -84,4 +84,4 @@ const RestaurantCard = ({ resData }) => {
   );
 };
 
-export default RestaurantCard;
+export default React.memo(RestaurantCard);

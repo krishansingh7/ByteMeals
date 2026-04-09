@@ -20,14 +20,14 @@ export const initializeRazorpay = async (user, totalAmount, onSuccess, onFailure
     key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Test key required
     amount: Math.round(totalAmount * 100), // Currency absolute subunits (paise)
     currency: "INR",
-    name: "ByteMeals",
+    name: "ByteMeal",
     description: "Test Environment Transaction",
     image: "https://cdn-images-1.medium.com/max/1200/1*C4h1f610h6kX6s2Yh6pUXQ.png",
     handler: function (response) {
       if (onSuccess) onSuccess(response.razorpay_payment_id);
     },
     prefill: {
-      name: user.displayName || "ByteMeals User",
+      name: user.displayName || "ByteMeal User",
       email: user.email || "test@example.com",
       contact: "9999999999", // Can be dynamically injected from Checkout form in production
     },

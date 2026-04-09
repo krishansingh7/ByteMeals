@@ -96,6 +96,7 @@ const CategoryCarousel = ({ categories }) => {
                   src={BASE_IMG_URL + category.imageId}
                   alt={catName}
                   className="w-full h-full object-cover scale-[1.35] origin-top mix-blend-multiply"
+                  loading="lazy"
                 />
               </div>
 

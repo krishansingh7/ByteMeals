@@ -79,7 +79,7 @@ const OrderCard = ({ order, now }) => {
                 <div key={i} className="flex items-start gap-4">
                    {item.imageId ? (
                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm flex-shrink-0">
-                       <img src={BASE_IMG_URL + item.imageId} alt={item.name} className="w-full h-full object-cover" />
+                       <img src={BASE_IMG_URL + item.imageId} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
                      </div>
                    ) : (
                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">

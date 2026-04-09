@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
 import { HOME_PAGE_API } from '../utils/constants';
 import { MOCK_RESTAURANTS_DATA } from '../mockData/restaurantData';
 
@@ -8,31 +9,37 @@ const useRestaurants = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [topChains, setTopChains] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const error = null; // Removed state as it guarantees uptime via fallbacks
 
-  useEffect(() => {
-    fetchData();
-  }, [lat, lng]);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
+  const { data: apiData, isLoading: queryLoading, isError } = useQuery({
+    queryKey: ['restaurants', lat, lng],
+    queryFn: async () => {
       const response = await fetch(HOME_PAGE_API(lat, lng));
-      if (!response.ok) throw new Error('Failed to fetch data');
+      if (!response.ok) throw new Error('Live API Failed');
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const isLoading = queryLoading && !apiData;
+
+  useEffect(() => {
+    if (apiData) {
+      const hasValidData = apiData?.data?.cards?.length > 0;
       
-      const json = await response.json();
-      extractCardsData(json);
-    } catch (err) {
-      console.warn("Live API Failed. Engaging Hybrid Fallback Protocol:", err.message);
-      // Fallback safely to our local 40-item simulated dataset
+      if (hasValidData) {
+        extractCardsData(apiData);
+      } else {
+        console.warn("API returned 200 OK but payload was empty/invalid. Engaging Fallback Protocol.");
+        extractCardsData(MOCK_RESTAURANTS_DATA);
+      }
+    } else if (isError) {
+      // Automatic fallback for 100% simulated uptime
+      console.warn("Live API Failed. Engaging Hybrid Fallback Protocol.");
       extractCardsData(MOCK_RESTAURANTS_DATA);
-      // Note: We deliberately do NOT call setError() here, to guarantee 100% uptime perception!
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [apiData, isError]);
 
   const extractCardsData = (json) => {
     const cards = json?.data?.cards || [];
